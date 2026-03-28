@@ -1,0 +1,77 @@
+version: "3.8"
+
+# Stack completa: Airflow Webserver + Scheduler + Postgres (metadata DB)
+# O projeto inteiro fica montado via volume — edite localmente, vê na UI.
+#
+# Uso:
+#   docker compose up -d
+#   docker compose exec airflow-scheduler airflow db init
+#   docker compose exec airflow-scheduler airflow users create \
+#     --username admin --password admin --firstname A --lastname B \
+#     --role Admin --email admin@example.com
+#   Acesse: http://localhost:8080
+
+x-airflow-common: &airflow-common
+  image: apache/airflow:2.9.1-python3.11
+  environment:
+    AIRFLOW__CORE__EXECUTOR:                    LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN:        postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__DAGS_FOLDER:                 /opt/airflow/dags
+    AIRFLOW__CORE__LOAD_EXAMPLES:               "false"
+    AIRFLOW__CORE__DEFAULT_TIMEZONE:            America/Sao_Paulo
+    AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE:    America/Sao_Paulo
+    PYTHONPATH:                                 /opt/project
+  volumes:
+    - ../airflow/dags:/opt/airflow/dags
+    - ../:/opt/project              # projeto inteiro disponível no container
+    - airflow_logs:/opt/airflow/logs
+  depends_on:
+    postgres:
+      condition: service_healthy
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER:     airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB:       airflow
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  airflow-init:
+    <<: *airflow-common
+    command: >
+      bash -c "
+        pip install pyspark==3.5.1 delta-spark==3.2.0 dbt-duckdb==1.8.1 duckdb==0.10.3
+             pandas requests --quiet &&
+        airflow db migrate &&
+        airflow users create --username admin --password admin
+          --firstname Admin --lastname User --role Admin --email admin@local.com
+      "
+    restart: "no"
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    restart: always
+
+volumes:
+  postgres_data:
+  airflow_logs:
