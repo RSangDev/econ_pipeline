@@ -1,0 +1,7 @@
+econ_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../data/warehouse/econ.duckdb"
+      threads: 2
