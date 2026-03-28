@@ -1,0 +1,12 @@
+apache-airflow==2.9.1
+apache-airflow-providers-http==4.10.0
+pyspark==3.5.1
+delta-spark==3.2.0
+dbt-duckdb==1.8.1
+duckdb==1.4.4
+pandas==2.2.0
+numpy==1.26.4
+requests==2.31.0
+streamlit==1.55.0
+plotly==5.19.0
+python-dotenv==1.0.1
