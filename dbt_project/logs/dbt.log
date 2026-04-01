@@ -1,0 +1,782 @@
+[0m18:47:51.133226 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000002515853AE50>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000025156AACBD0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000251587DFCD0>]}
+
+
+============================== 18:47:51.255856 | 9ab90685-a330-44c1-b853-52b5966eb241 ==============================
+[0m18:47:51.255856 [info ] [MainThread]: Running with dbt=1.11.7
+[0m18:47:51.256860 [debug] [MainThread]: running dbt with arguments {'static_parser': 'True', 'no_print': 'None', 'version_check': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'None', 'printer_width': '80', 'write_json': 'True', 'introspect': 'True', 'log_cache_events': 'False', 'empty': 'None', 'cache_selected_only': 'False', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'partial_parse': 'True', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'profiles_dir': 'D:\\Projetos\\econ_pipeline\\dbt_project', 'invocation_command': 'dbt deps', 'indirect_selection': 'eager', 'use_colors': 'True', 'use_experimental_parser': 'False', 'log_path': 'D:\\Projetos\\econ_pipeline\\dbt_project\\logs'}
+[0m18:47:51.477805 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '9ab90685-a330-44c1-b853-52b5966eb241', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000251587E6FD0>]}
+[0m18:47:52.127655 [debug] [MainThread]: Set downloads directory='C:\Users\rafas\AppData\Local\Temp\dbt-downloads-hcmzlu02'
+[0m18:47:52.128656 [debug] [MainThread]: Making package index registry request: GET https://hub.getdbt.com/api/v1/index.json
+[0m18:47:52.727308 [debug] [MainThread]: Response from registry index: GET https://hub.getdbt.com/api/v1/index.json 200
+[0m18:47:52.729312 [debug] [MainThread]: Making package registry request: GET https://hub.getdbt.com/api/v1/dbt-labs/dbt_utils.json
+[0m18:47:53.219303 [debug] [MainThread]: Response from registry: GET https://hub.getdbt.com/api/v1/dbt-labs/dbt_utils.json 200
+[0m18:47:53.255355 [info ] [MainThread]: Updating lock file in file path: D:\Projetos\econ_pipeline\dbt_project/package-lock.yml
+[0m18:47:53.270714 [debug] [MainThread]: Set downloads directory='C:\Users\rafas\AppData\Local\Temp\dbt-downloads-pddf9adz'
+[0m18:47:53.279158 [info ] [MainThread]: Installing dbt-labs/dbt_utils
+[0m18:47:54.953246 [info ] [MainThread]: Installed from version 1.3.0
+[0m18:47:54.954719 [info ] [MainThread]: Updated version available: 1.3.3
+[0m18:47:54.955720 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'package', 'label': '9ab90685-a330-44c1-b853-52b5966eb241', 'property_': 'install', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000251588CB390>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000251588ABA90>]}
+[0m18:47:54.956726 [info ] [MainThread]: 
+[0m18:47:54.957719 [info ] [MainThread]: Updates available for packages: ['dbt-labs/dbt_utils']                 
+Update your versions in packages.yml, then run dbt deps
+[0m18:47:54.960719 [debug] [MainThread]: Command `dbt deps` succeeded at 18:47:54.960719 after 3.96 seconds
+[0m18:47:54.961719 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000251526E5990>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x00000251526612D0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x0000025152661ED0>]}
+[0m18:47:54.963224 [debug] [MainThread]: Flushing usage events
+[0m18:47:55.963588 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m18:47:58.957812 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F56AB0B450>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F56ADE5450>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F56ADE7550>]}
+
+
+============================== 18:47:58.961812 | 3384cfe0-41f9-4b02-b10f-843eb0663c0d ==============================
+[0m18:47:58.961812 [info ] [MainThread]: Running with dbt=1.11.7
+[0m18:47:58.963314 [debug] [MainThread]: running dbt with arguments {'version_check': 'True', 'no_print': 'None', 'static_parser': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'None', 'printer_width': '80', 'write_json': 'True', 'empty': 'False', 'log_cache_events': 'False', 'introspect': 'True', 'cache_selected_only': 'False', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'profiles_dir': '.', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'use_colors': 'True', 'indirect_selection': 'eager', 'invocation_command': 'dbt run --profiles-dir . --project-dir .', 'use_experimental_parser': 'False', 'log_path': 'logs'}
+[0m18:47:59.514866 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '3384cfe0-41f9-4b02-b10f-843eb0663c0d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F56AE22050>]}
+[0m18:47:59.643224 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '3384cfe0-41f9-4b02-b10f-843eb0663c0d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F56681DD50>]}
+[0m18:47:59.654742 [info ] [MainThread]: Registered adapter: duckdb=1.8.1
+[0m18:48:00.541507 [debug] [MainThread]: checksum: b80718358155fc17c3559352095564dd56ada1cc1a1c0ef2e62c857e71583775, vars: {}, profile: , target: , version: 1.11.7
+[0m18:48:00.542524 [info ] [MainThread]: Unable to do partial parsing because saved manifest not found. Starting full parse.
+[0m18:48:00.543509 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'partial_parser', 'label': '3384cfe0-41f9-4b02-b10f-843eb0663c0d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F56ADE5E10>]}
+[0m18:48:06.353493 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '3384cfe0-41f9-4b02-b10f-843eb0663c0d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F56AED9150>]}
+[0m18:48:06.518179 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m18:48:06.525024 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m18:48:06.713915 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '3384cfe0-41f9-4b02-b10f-843eb0663c0d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F56C92B990>]}
+[0m18:48:06.714917 [info ] [MainThread]: Found 3 models, 7 data tests, 1 source, 571 macros
+[0m18:48:06.715917 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '3384cfe0-41f9-4b02-b10f-843eb0663c0d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F56C7DDD10>]}
+[0m18:48:06.717981 [info ] [MainThread]: 
+[0m18:48:06.719979 [info ] [MainThread]: Concurrency: 2 threads (target='dev')
+[0m18:48:06.719979 [info ] [MainThread]: 
+[0m18:48:06.720979 [debug] [MainThread]: Acquiring new duckdb connection 'master'
+[0m18:48:06.729035 [debug] [ThreadPool]: Acquiring new duckdb connection 'list_econ'
+[0m18:48:11.874576 [debug] [ThreadPool]: Using duckdb connection "list_econ"
+[0m18:48:11.876588 [debug] [ThreadPool]: On list_econ: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "connection_name": "list_econ"} */
+
+    
+    select schema_name
+    from system.information_schema.schemata
+    
+    where catalog_name = '"econ"'
+    
+  
+  
+[0m18:48:11.877102 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m18:48:12.114362 [debug] [ThreadPool]: SQL status: OK in 0.237 seconds
+[0m18:48:12.118386 [debug] [ThreadPool]: On list_econ: Close
+[0m18:48:12.123891 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_econ, now create_econ_main)
+[0m18:48:12.125898 [debug] [ThreadPool]: Creating schema "database: "econ"
+schema: "main"
+"
+[0m18:48:12.137145 [debug] [ThreadPool]: Using duckdb connection "create_econ_main"
+[0m18:48:12.138153 [debug] [ThreadPool]: On create_econ_main: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "connection_name": "create_econ_main"} */
+
+    
+        select type from duckdb_databases()
+        where database_name='econ'
+        and type='sqlite'
+    
+  
+[0m18:48:12.139153 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m18:48:12.170220 [debug] [ThreadPool]: SQL status: OK in 0.030 seconds
+[0m18:48:12.173723 [debug] [ThreadPool]: Using duckdb connection "create_econ_main"
+[0m18:48:12.174571 [debug] [ThreadPool]: On create_econ_main: BEGIN
+[0m18:48:12.177085 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m18:48:12.178091 [debug] [ThreadPool]: Using duckdb connection "create_econ_main"
+[0m18:48:12.178091 [debug] [ThreadPool]: On create_econ_main: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "connection_name": "create_econ_main"} */
+
+    
+    
+        create schema if not exists "econ"."main"
+    
+[0m18:48:12.180091 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m18:48:12.182093 [debug] [ThreadPool]: On create_econ_main: COMMIT
+[0m18:48:12.182093 [debug] [ThreadPool]: Using duckdb connection "create_econ_main"
+[0m18:48:12.184619 [debug] [ThreadPool]: On create_econ_main: COMMIT
+[0m18:48:12.187229 [debug] [ThreadPool]: SQL status: OK in 0.001 seconds
+[0m18:48:12.188267 [debug] [ThreadPool]: On create_econ_main: Close
+[0m18:48:12.194133 [debug] [ThreadPool]: Acquiring new duckdb connection 'list_econ_main'
+[0m18:48:12.205769 [debug] [ThreadPool]: Using duckdb connection "list_econ_main"
+[0m18:48:12.206777 [debug] [ThreadPool]: On list_econ_main: BEGIN
+[0m18:48:12.207776 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m18:48:12.233596 [debug] [ThreadPool]: SQL status: OK in 0.026 seconds
+[0m18:48:12.235111 [debug] [ThreadPool]: Using duckdb connection "list_econ_main"
+[0m18:48:12.236111 [debug] [ThreadPool]: On list_econ_main: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "connection_name": "list_econ_main"} */
+select
+      'econ' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where table_schema = 'main'
+    and table_catalog = 'econ'
+  
+[0m18:48:12.341637 [debug] [ThreadPool]: SQL status: OK in 0.105 seconds
+[0m18:48:12.345797 [debug] [ThreadPool]: On list_econ_main: ROLLBACK
+[0m18:48:12.366865 [debug] [ThreadPool]: Failed to rollback 'list_econ_main'
+[0m18:48:12.368874 [debug] [ThreadPool]: On list_econ_main: Close
+[0m18:48:12.374398 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '3384cfe0-41f9-4b02-b10f-843eb0663c0d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F56AE73890>]}
+[0m18:48:12.376398 [debug] [MainThread]: Using duckdb connection "master"
+[0m18:48:12.377398 [debug] [MainThread]: On master: BEGIN
+[0m18:48:12.378413 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m18:48:12.399442 [debug] [MainThread]: SQL status: OK in 0.021 seconds
+[0m18:48:12.400446 [debug] [MainThread]: On master: COMMIT
+[0m18:48:12.401445 [debug] [MainThread]: Using duckdb connection "master"
+[0m18:48:12.402446 [debug] [MainThread]: On master: COMMIT
+[0m18:48:12.403444 [debug] [MainThread]: SQL status: OK in 0.000 seconds
+[0m18:48:12.404570 [debug] [MainThread]: On master: Close
+[0m18:48:12.760757 [debug] [Thread-1 (]: Began running node model.econ_pipeline.gld_correlacoes
+[0m18:48:12.761755 [debug] [Thread-2 (]: Began running node model.econ_pipeline.gld_painel_macro
+[0m18:48:12.761755 [info ] [Thread-1 (]: 1 of 3 START sql table model main.gld_correlacoes .............................. [RUN]
+[0m18:48:12.763260 [info ] [Thread-2 (]: 2 of 3 START sql table model main.gld_painel_macro ............................. [RUN]
+[0m18:48:12.764271 [debug] [Thread-1 (]: Acquiring new duckdb connection 'model.econ_pipeline.gld_correlacoes'
+[0m18:48:12.765267 [debug] [Thread-2 (]: Acquiring new duckdb connection 'model.econ_pipeline.gld_painel_macro'
+[0m18:48:12.766276 [debug] [Thread-1 (]: Began compiling node model.econ_pipeline.gld_correlacoes
+[0m18:48:12.767277 [debug] [Thread-2 (]: Began compiling node model.econ_pipeline.gld_painel_macro
+[0m18:48:12.781787 [debug] [Thread-1 (]: Writing injected SQL for node "model.econ_pipeline.gld_correlacoes"
+[0m18:48:12.789878 [debug] [Thread-2 (]: Writing injected SQL for node "model.econ_pipeline.gld_painel_macro"
+[0m18:48:12.816638 [debug] [Thread-2 (]: Began executing node model.econ_pipeline.gld_painel_macro
+[0m18:48:12.818670 [debug] [Thread-1 (]: Began executing node model.econ_pipeline.gld_correlacoes
+[0m18:48:12.879616 [debug] [Thread-2 (]: Writing runtime sql for node "model.econ_pipeline.gld_painel_macro"
+[0m18:48:12.886049 [debug] [Thread-1 (]: Writing runtime sql for node "model.econ_pipeline.gld_correlacoes"
+[0m18:48:12.891058 [debug] [Thread-1 (]: Using duckdb connection "model.econ_pipeline.gld_correlacoes"
+[0m18:48:12.891058 [debug] [Thread-2 (]: Using duckdb connection "model.econ_pipeline.gld_painel_macro"
+[0m18:48:12.892058 [debug] [Thread-1 (]: On model.econ_pipeline.gld_correlacoes: BEGIN
+[0m18:48:12.893566 [debug] [Thread-2 (]: On model.econ_pipeline.gld_painel_macro: BEGIN
+[0m18:48:12.894572 [debug] [Thread-1 (]: Opening a new connection, currently in state init
+[0m18:48:12.895571 [debug] [Thread-2 (]: Opening a new connection, currently in state init
+[0m18:48:12.921655 [debug] [Thread-1 (]: SQL status: OK in 0.027 seconds
+[0m18:48:12.921655 [debug] [Thread-2 (]: SQL status: OK in 0.027 seconds
+[0m18:48:12.923172 [debug] [Thread-1 (]: Using duckdb connection "model.econ_pipeline.gld_correlacoes"
+[0m18:48:12.924187 [debug] [Thread-2 (]: Using duckdb connection "model.econ_pipeline.gld_painel_macro"
+[0m18:48:12.925181 [debug] [Thread-1 (]: On model.econ_pipeline.gld_correlacoes: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "model.econ_pipeline.gld_correlacoes"} */
+
+  
+    
+    
+
+    create  table
+      "econ"."main"."gld_correlacoes__dbt_tmp"
+  
+    as (
+      
+
+-- Correlação entre indicadores por ano
+-- Responde: quando o câmbio sobe, o IPCA sobe também?
+
+WITH mensal AS (
+    SELECT
+        ano, mes,
+        MAX(CASE WHEN indicador = 'selic_mensal'    THEN valor END) AS selic,
+        MAX(CASE WHEN indicador = 'ipca_mensal'     THEN valor END) AS ipca,
+        MAX(CASE WHEN indicador = 'cambio_usd_brl'  THEN valor END) AS cambio,
+        MAX(CASE WHEN indicador = 'desemprego_pct'  THEN valor END) AS desemprego
+    FROM "econ"."silver"."indicadores"
+    WHERE mes IS NOT NULL AND valor IS NOT NULL
+    GROUP BY ano, mes
+),
+
+com_lags AS (
+    SELECT
+        ano, mes, selic, ipca, cambio, desemprego,
+        LAG(ipca,   1) OVER (ORDER BY ano, mes) AS ipca_lag1,
+        LAG(cambio, 1) OVER (ORDER BY ano, mes) AS cambio_lag1,
+        LAG(selic,  1) OVER (ORDER BY ano, mes) AS selic_lag1
+    FROM mensal
+)
+
+SELECT
+    ano,
+    ROUND(AVG(selic),      2) AS selic_media,
+    ROUND(AVG(ipca),       2) AS ipca_media,
+    ROUND(AVG(cambio),     2) AS cambio_medio,
+    ROUND(AVG(desemprego), 2) AS desemprego_medio,
+    -- Diferença cambio vs IPCA no mesmo mês
+    ROUND(AVG(cambio - ipca_lag1), 2) AS cambio_vs_ipca_defasado
+FROM com_lags
+GROUP BY ano
+ORDER BY ano
+    );
+  
+  
+[0m18:48:12.925181 [debug] [Thread-2 (]: On model.econ_pipeline.gld_painel_macro: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "model.econ_pipeline.gld_painel_macro"} */
+
+  
+    
+    
+
+    create  table
+      "econ"."main"."gld_painel_macro__dbt_tmp"
+  
+    as (
+      
+
+-- Painel macro: SELIC, IPCA, câmbio e PIB por ano
+-- Pivota os indicadores em colunas para facilitar análise comparativa
+
+WITH base AS (
+    SELECT
+        ano,
+        indicador,
+        ROUND(AVG(valor), 4) AS valor_medio,
+        ROUND(MIN(valor), 4) AS valor_min,
+        ROUND(MAX(valor), 4) AS valor_max,
+        COUNT(*)              AS n_observacoes
+    FROM "econ"."silver"."indicadores"
+    WHERE ano >= 2015 AND valor IS NOT NULL
+    GROUP BY ano, indicador
+)
+
+SELECT
+    ano,
+    MAX(CASE WHEN indicador = 'selic_mensal'   THEN valor_medio END) AS selic_media,
+    MAX(CASE WHEN indicador = 'ipca_mensal'    THEN valor_medio END) AS ipca_media,
+    MAX(CASE WHEN indicador = 'cambio_usd_brl' THEN valor_medio END) AS cambio_medio,
+    MAX(CASE WHEN indicador = 'pib_variacao_pct' THEN valor_medio END) AS pib_variacao_media,
+    MAX(CASE WHEN indicador = 'desemprego_pct' THEN valor_medio END) AS desemprego_medio,
+    MAX(CASE WHEN indicador = 'renda_media_pc' THEN valor_medio END) AS renda_media_pc
+FROM base
+GROUP BY ano
+ORDER BY ano
+    );
+  
+  
+[0m18:48:13.025776 [debug] [Thread-2 (]: SQL status: OK in 0.098 seconds
+[0m18:48:13.038336 [debug] [Thread-2 (]: Using duckdb connection "model.econ_pipeline.gld_painel_macro"
+[0m18:48:13.038336 [debug] [Thread-1 (]: SQL status: OK in 0.112 seconds
+[0m18:48:13.039333 [debug] [Thread-2 (]: On model.econ_pipeline.gld_painel_macro: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "model.econ_pipeline.gld_painel_macro"} */
+alter table "econ"."main"."gld_painel_macro__dbt_tmp" rename to "gld_painel_macro"
+[0m18:48:13.044850 [debug] [Thread-1 (]: Using duckdb connection "model.econ_pipeline.gld_correlacoes"
+[0m18:48:13.047860 [debug] [Thread-1 (]: On model.econ_pipeline.gld_correlacoes: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "model.econ_pipeline.gld_correlacoes"} */
+alter table "econ"."main"."gld_correlacoes__dbt_tmp" rename to "gld_correlacoes"
+[0m18:48:13.047860 [debug] [Thread-2 (]: SQL status: OK in 0.002 seconds
+[0m18:48:13.070459 [debug] [Thread-1 (]: SQL status: OK in 0.021 seconds
+[0m18:48:13.083536 [debug] [Thread-2 (]: On model.econ_pipeline.gld_painel_macro: COMMIT
+[0m18:48:13.086561 [debug] [Thread-1 (]: On model.econ_pipeline.gld_correlacoes: COMMIT
+[0m18:48:13.088560 [debug] [Thread-2 (]: Using duckdb connection "model.econ_pipeline.gld_painel_macro"
+[0m18:48:13.089560 [debug] [Thread-1 (]: Using duckdb connection "model.econ_pipeline.gld_correlacoes"
+[0m18:48:13.090559 [debug] [Thread-2 (]: On model.econ_pipeline.gld_painel_macro: COMMIT
+[0m18:48:13.091560 [debug] [Thread-1 (]: On model.econ_pipeline.gld_correlacoes: COMMIT
+[0m18:48:13.128429 [debug] [Thread-2 (]: SQL status: OK in 0.036 seconds
+[0m18:48:13.140993 [debug] [Thread-2 (]: Using duckdb connection "model.econ_pipeline.gld_painel_macro"
+[0m18:48:13.142002 [debug] [Thread-2 (]: On model.econ_pipeline.gld_painel_macro: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "model.econ_pipeline.gld_painel_macro"} */
+drop table if exists "econ"."main"."gld_painel_macro__dbt_backup" cascade
+[0m18:48:13.153709 [debug] [Thread-1 (]: SQL status: OK in 0.061 seconds
+[0m18:48:13.154611 [debug] [Thread-2 (]: SQL status: OK in 0.010 seconds
+[0m18:48:13.160138 [debug] [Thread-1 (]: Using duckdb connection "model.econ_pipeline.gld_correlacoes"
+[0m18:48:13.163639 [debug] [Thread-2 (]: On model.econ_pipeline.gld_painel_macro: Close
+[0m18:48:13.164646 [debug] [Thread-1 (]: On model.econ_pipeline.gld_correlacoes: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "model.econ_pipeline.gld_correlacoes"} */
+drop table if exists "econ"."main"."gld_correlacoes__dbt_backup" cascade
+[0m18:48:13.168657 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m18:48:13.171657 [debug] [Thread-1 (]: On model.econ_pipeline.gld_correlacoes: Close
+[0m18:48:13.177179 [debug] [Thread-2 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '3384cfe0-41f9-4b02-b10f-843eb0663c0d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F56AE5B910>]}
+[0m18:48:13.179178 [info ] [Thread-2 (]: 2 of 3 OK created sql table model main.gld_painel_macro ........................ [[32mOK[0m in 0.40s]
+[0m18:48:13.180181 [debug] [Thread-2 (]: Finished running node model.econ_pipeline.gld_painel_macro
+[0m18:48:13.181181 [debug] [Thread-2 (]: Began running node model.econ_pipeline.gld_serie_mensal
+[0m18:48:13.183179 [info ] [Thread-2 (]: 3 of 3 START sql table model main.gld_serie_mensal ............................. [RUN]
+[0m18:48:13.184695 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly model.econ_pipeline.gld_painel_macro, now model.econ_pipeline.gld_serie_mensal)
+[0m18:48:13.185696 [debug] [Thread-2 (]: Began compiling node model.econ_pipeline.gld_serie_mensal
+[0m18:48:13.191695 [debug] [Thread-2 (]: Writing injected SQL for node "model.econ_pipeline.gld_serie_mensal"
+[0m18:48:13.193203 [debug] [Thread-2 (]: Began executing node model.econ_pipeline.gld_serie_mensal
+[0m18:48:13.201581 [debug] [Thread-2 (]: Writing runtime sql for node "model.econ_pipeline.gld_serie_mensal"
+[0m18:48:13.204090 [debug] [Thread-2 (]: Using duckdb connection "model.econ_pipeline.gld_serie_mensal"
+[0m18:48:13.204771 [debug] [Thread-2 (]: On model.econ_pipeline.gld_serie_mensal: BEGIN
+[0m18:48:13.205779 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m18:48:13.264643 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '3384cfe0-41f9-4b02-b10f-843eb0663c0d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F56AEAB6D0>]}
+[0m18:48:13.267652 [info ] [Thread-1 (]: 1 of 3 OK created sql table model main.gld_correlacoes ......................... [[32mOK[0m in 0.50s]
+[0m18:48:13.269648 [debug] [Thread-1 (]: Finished running node model.econ_pipeline.gld_correlacoes
+[0m18:48:13.306505 [debug] [Thread-2 (]: SQL status: OK in 0.101 seconds
+[0m18:48:13.307505 [debug] [Thread-2 (]: Using duckdb connection "model.econ_pipeline.gld_serie_mensal"
+[0m18:48:13.308507 [debug] [Thread-2 (]: On model.econ_pipeline.gld_serie_mensal: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "model.econ_pipeline.gld_serie_mensal"} */
+
+  
+    
+    
+
+    create  table
+      "econ"."main"."gld_serie_mensal__dbt_tmp"
+  
+    as (
+      
+
+-- Série mensal de todos os indicadores com variação YoY
+-- Usada pelos gráficos de linha do dashboard
+
+SELECT
+    indicador,
+    categoria,
+    fonte,
+    ano,
+    mes,
+    periodo,
+    ROUND(valor, 4)        AS valor,
+    unidade,
+    ROUND(variacao_yoy, 2) AS variacao_yoy,
+    CASE
+        WHEN variacao_yoy > 0  THEN 'alta'
+        WHEN variacao_yoy < 0  THEN 'queda'
+        WHEN variacao_yoy = 0  THEN 'estavel'
+        ELSE 'sem_dado'
+    END                    AS tendencia
+
+FROM "econ"."silver"."indicadores"
+WHERE mes IS NOT NULL
+  AND valor IS NOT NULL
+ORDER BY indicador, ano, mes
+    );
+  
+  
+[0m18:48:13.340126 [debug] [Thread-2 (]: SQL status: OK in 0.030 seconds
+[0m18:48:13.346646 [debug] [Thread-2 (]: Using duckdb connection "model.econ_pipeline.gld_serie_mensal"
+[0m18:48:13.347645 [debug] [Thread-2 (]: On model.econ_pipeline.gld_serie_mensal: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "model.econ_pipeline.gld_serie_mensal"} */
+alter table "econ"."main"."gld_serie_mensal__dbt_tmp" rename to "gld_serie_mensal"
+[0m18:48:13.349648 [debug] [Thread-2 (]: SQL status: OK in 0.001 seconds
+[0m18:48:13.353157 [debug] [Thread-2 (]: On model.econ_pipeline.gld_serie_mensal: COMMIT
+[0m18:48:13.354807 [debug] [Thread-2 (]: Using duckdb connection "model.econ_pipeline.gld_serie_mensal"
+[0m18:48:13.355816 [debug] [Thread-2 (]: On model.econ_pipeline.gld_serie_mensal: COMMIT
+[0m18:48:13.396382 [debug] [Thread-2 (]: SQL status: OK in 0.040 seconds
+[0m18:48:13.400383 [debug] [Thread-2 (]: Using duckdb connection "model.econ_pipeline.gld_serie_mensal"
+[0m18:48:13.401385 [debug] [Thread-2 (]: On model.econ_pipeline.gld_serie_mensal: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "model.econ_pipeline.gld_serie_mensal"} */
+drop table if exists "econ"."main"."gld_serie_mensal__dbt_backup" cascade
+[0m18:48:13.403401 [debug] [Thread-2 (]: SQL status: OK in 0.000 seconds
+[0m18:48:13.406419 [debug] [Thread-2 (]: On model.econ_pipeline.gld_serie_mensal: Close
+[0m18:48:13.529570 [debug] [Thread-2 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': '3384cfe0-41f9-4b02-b10f-843eb0663c0d', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F56CADF790>]}
+[0m18:48:13.532094 [info ] [Thread-2 (]: 3 of 3 OK created sql table model main.gld_serie_mensal ........................ [[32mOK[0m in 0.35s]
+[0m18:48:13.533602 [debug] [Thread-2 (]: Finished running node model.econ_pipeline.gld_serie_mensal
+[0m18:48:13.537622 [debug] [MainThread]: Using duckdb connection "master"
+[0m18:48:13.539621 [debug] [MainThread]: On master: BEGIN
+[0m18:48:13.540618 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m18:48:13.579320 [debug] [MainThread]: SQL status: OK in 0.038 seconds
+[0m18:48:13.580307 [debug] [MainThread]: On master: COMMIT
+[0m18:48:13.581307 [debug] [MainThread]: Using duckdb connection "master"
+[0m18:48:13.582308 [debug] [MainThread]: On master: COMMIT
+[0m18:48:13.583306 [debug] [MainThread]: SQL status: OK in 0.001 seconds
+[0m18:48:13.584388 [debug] [MainThread]: On master: Close
+[0m18:48:13.589201 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m18:48:13.590202 [debug] [MainThread]: Connection 'create_econ_main' was properly closed.
+[0m18:48:13.591201 [debug] [MainThread]: Connection 'list_econ_main' was properly closed.
+[0m18:48:13.592203 [debug] [MainThread]: Connection 'model.econ_pipeline.gld_correlacoes' was properly closed.
+[0m18:48:13.593205 [debug] [MainThread]: Connection 'model.econ_pipeline.gld_serie_mensal' was properly closed.
+[0m18:48:13.594730 [info ] [MainThread]: 
+[0m18:48:13.595727 [info ] [MainThread]: Finished running 3 table models in 0 hours 0 minutes and 6.87 seconds (6.87s).
+[0m18:48:13.597732 [debug] [MainThread]: Command end result
+[0m18:48:13.648093 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m18:48:13.654646 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m18:48:13.667177 [debug] [MainThread]: Wrote artifact RunExecutionResult to .\target\run_results.json
+[0m18:48:13.668179 [info ] [MainThread]: 
+[0m18:48:13.670180 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m18:48:13.672178 [info ] [MainThread]: 
+[0m18:48:13.673177 [info ] [MainThread]: Done. PASS=3 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=3
+[0m18:48:13.675501 [debug] [MainThread]: Command `dbt run` succeeded at 18:48:13.674850 after 14.83 seconds
+[0m18:48:13.675501 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F565B22510>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F565B21390>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001F565B22590>]}
+[0m18:48:13.678041 [debug] [MainThread]: Flushing usage events
+[0m18:48:14.717231 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m18:48:17.873486 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FEDB08AC90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FEE06D3C90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FEDE8E0D90>]}
+
+
+============================== 18:48:17.877999 | 829443ca-6a35-49d8-be55-c18f4db6870b ==============================
+[0m18:48:17.877999 [info ] [MainThread]: Running with dbt=1.11.7
+[0m18:48:17.880002 [debug] [MainThread]: running dbt with arguments {'version_check': 'True', 'no_print': 'None', 'static_parser': 'True', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'printer_width': '80', 'write_json': 'True', 'empty': 'None', 'log_cache_events': 'False', 'introspect': 'True', 'cache_selected_only': 'False', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'partial_parse': 'True', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'profiles_dir': '.', 'invocation_command': 'dbt test --profiles-dir . --project-dir .', 'use_colors': 'True', 'indirect_selection': 'eager', 'use_experimental_parser': 'False', 'log_path': 'logs'}
+[0m18:48:18.154498 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '829443ca-6a35-49d8-be55-c18f4db6870b', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FEE0741310>]}
+[0m18:48:18.219310 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '829443ca-6a35-49d8-be55-c18f4db6870b', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FEDB0ADCD0>]}
+[0m18:48:18.221316 [info ] [MainThread]: Registered adapter: duckdb=1.8.1
+[0m18:48:18.839971 [debug] [MainThread]: checksum: b80718358155fc17c3559352095564dd56ada1cc1a1c0ef2e62c857e71583775, vars: {}, profile: , target: , version: 1.11.7
+[0m18:48:19.140956 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m18:48:19.141949 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m18:48:19.143453 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m18:48:19.217090 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '829443ca-6a35-49d8-be55-c18f4db6870b', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FEE0CA5090>]}
+[0m18:48:19.353652 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m18:48:19.358684 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m18:48:19.586215 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '829443ca-6a35-49d8-be55-c18f4db6870b', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FEDEF24A90>]}
+[0m18:48:19.587224 [info ] [MainThread]: Found 3 models, 7 data tests, 1 source, 571 macros
+[0m18:48:19.588213 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '829443ca-6a35-49d8-be55-c18f4db6870b', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FEE0C316D0>]}
+[0m18:48:19.590219 [info ] [MainThread]: 
+[0m18:48:19.591220 [info ] [MainThread]: Concurrency: 2 threads (target='dev')
+[0m18:48:19.592213 [info ] [MainThread]: 
+[0m18:48:19.593223 [debug] [MainThread]: Acquiring new duckdb connection 'master'
+[0m18:48:19.599738 [debug] [ThreadPool]: Acquiring new duckdb connection 'list_econ_main'
+[0m18:48:19.814037 [debug] [ThreadPool]: Using duckdb connection "list_econ_main"
+[0m18:48:19.815110 [debug] [ThreadPool]: On list_econ_main: BEGIN
+[0m18:48:19.816062 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m18:48:19.841753 [debug] [ThreadPool]: SQL status: OK in 0.025 seconds
+[0m18:48:19.841753 [debug] [ThreadPool]: Using duckdb connection "list_econ_main"
+[0m18:48:19.843270 [debug] [ThreadPool]: On list_econ_main: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "connection_name": "list_econ_main"} */
+select
+      'econ' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where table_schema = 'main'
+    and table_catalog = 'econ'
+  
+[0m18:48:19.864308 [debug] [ThreadPool]: SQL status: OK in 0.020 seconds
+[0m18:48:19.867308 [debug] [ThreadPool]: On list_econ_main: ROLLBACK
+[0m18:48:19.869309 [debug] [ThreadPool]: Failed to rollback 'list_econ_main'
+[0m18:48:19.869309 [debug] [ThreadPool]: On list_econ_main: Close
+[0m18:48:19.874411 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '829443ca-6a35-49d8-be55-c18f4db6870b', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FEE0B26A10>]}
+[0m18:48:19.875411 [debug] [MainThread]: Using duckdb connection "master"
+[0m18:48:19.876406 [debug] [MainThread]: On master: BEGIN
+[0m18:48:19.876406 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m18:48:19.891936 [debug] [MainThread]: SQL status: OK in 0.015 seconds
+[0m18:48:19.891936 [debug] [MainThread]: On master: COMMIT
+[0m18:48:19.893446 [debug] [MainThread]: Using duckdb connection "master"
+[0m18:48:19.894459 [debug] [MainThread]: On master: COMMIT
+[0m18:48:19.895459 [debug] [MainThread]: SQL status: OK in 0.001 seconds
+[0m18:48:19.898455 [debug] [MainThread]: On master: Close
+[0m18:48:19.907969 [debug] [Thread-1 (]: Began running node test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149
+[0m18:48:19.907969 [debug] [Thread-2 (]: Began running node test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8
+[0m18:48:19.908968 [info ] [Thread-1 (]: 1 of 7 START test accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado  [RUN]
+[0m18:48:19.909970 [info ] [Thread-2 (]: 2 of 7 START test not_null_gld_correlacoes_ano ................................. [RUN]
+[0m18:48:19.910969 [debug] [Thread-1 (]: Acquiring new duckdb connection 'test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149'
+[0m18:48:19.911970 [debug] [Thread-2 (]: Acquiring new duckdb connection 'test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8'
+[0m18:48:19.913478 [debug] [Thread-1 (]: Began compiling node test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149
+[0m18:48:19.913478 [debug] [Thread-2 (]: Began compiling node test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8
+[0m18:48:19.941135 [debug] [Thread-1 (]: Writing injected SQL for node "test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149"
+[0m18:48:19.954249 [debug] [Thread-2 (]: Writing injected SQL for node "test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8"
+[0m18:48:19.969773 [debug] [Thread-1 (]: Began executing node test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149
+[0m18:48:19.969773 [debug] [Thread-2 (]: Began executing node test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8
+[0m18:48:19.987817 [debug] [Thread-1 (]: Writing runtime sql for node "test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149"
+[0m18:48:19.991823 [debug] [Thread-2 (]: Writing runtime sql for node "test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8"
+[0m18:48:19.994337 [debug] [Thread-1 (]: Using duckdb connection "test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149"
+[0m18:48:19.995351 [debug] [Thread-2 (]: Using duckdb connection "test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8"
+[0m18:48:19.996366 [debug] [Thread-1 (]: On test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149: BEGIN
+[0m18:48:19.997344 [debug] [Thread-2 (]: On test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8: BEGIN
+[0m18:48:19.999335 [debug] [Thread-1 (]: Opening a new connection, currently in state init
+[0m18:48:20.000338 [debug] [Thread-2 (]: Opening a new connection, currently in state init
+[0m18:48:20.027421 [debug] [Thread-1 (]: SQL status: OK in 0.029 seconds
+[0m18:48:20.028422 [debug] [Thread-2 (]: SQL status: OK in 0.028 seconds
+[0m18:48:20.029421 [debug] [Thread-1 (]: Using duckdb connection "test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149"
+[0m18:48:20.029421 [debug] [Thread-2 (]: Using duckdb connection "test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8"
+[0m18:48:20.030430 [debug] [Thread-1 (]: On test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+with all_values as (
+
+    select
+        tendencia as value_field,
+        count(*) as n_records
+
+    from "econ"."main"."gld_serie_mensal"
+    group by tendencia
+
+)
+
+select *
+from all_values
+where value_field not in (
+    'alta','queda','estavel','sem_dado'
+)
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m18:48:20.031433 [debug] [Thread-2 (]: On test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select ano
+from "econ"."main"."gld_correlacoes"
+where ano is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m18:48:20.033424 [debug] [Thread-2 (]: SQL status: OK in 0.001 seconds
+[0m18:48:20.035097 [debug] [Thread-1 (]: SQL status: OK in 0.003 seconds
+[0m18:48:20.039103 [debug] [Thread-2 (]: On test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8: ROLLBACK
+[0m18:48:20.043615 [debug] [Thread-1 (]: On test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149: ROLLBACK
+[0m18:48:20.044632 [debug] [Thread-2 (]: Failed to rollback 'test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8'
+[0m18:48:20.046625 [debug] [Thread-1 (]: Failed to rollback 'test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149'
+[0m18:48:20.047630 [debug] [Thread-2 (]: On test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8: Close
+[0m18:48:20.048626 [debug] [Thread-1 (]: On test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149: Close
+[0m18:48:20.050627 [info ] [Thread-2 (]: 2 of 7 PASS not_null_gld_correlacoes_ano ....................................... [[32mPASS[0m in 0.14s]
+[0m18:48:20.052627 [debug] [Thread-2 (]: Finished running node test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8
+[0m18:48:20.052627 [debug] [Thread-2 (]: Began running node test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194
+[0m18:48:20.054145 [info ] [Thread-2 (]: 3 of 7 START test not_null_gld_painel_macro_ano ................................ [RUN]
+[0m18:48:20.055150 [info ] [Thread-1 (]: 1 of 7 PASS accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado  [[32mPASS[0m in 0.14s]
+[0m18:48:20.057162 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly test.econ_pipeline.not_null_gld_correlacoes_ano.53d20cd7d8, now test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194)
+[0m18:48:20.058159 [debug] [Thread-1 (]: Finished running node test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149
+[0m18:48:20.059160 [debug] [Thread-2 (]: Began compiling node test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194
+[0m18:48:20.060159 [debug] [Thread-1 (]: Began running node test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb
+[0m18:48:20.067814 [debug] [Thread-2 (]: Writing injected SQL for node "test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194"
+[0m18:48:20.068814 [info ] [Thread-1 (]: 4 of 7 START test not_null_gld_serie_mensal_indicador .......................... [RUN]
+[0m18:48:20.070813 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.econ_pipeline.accepted_values_gld_serie_mensal_tendencia__alta__queda__estavel__sem_dado.48696a5149, now test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb)
+[0m18:48:20.071814 [debug] [Thread-2 (]: Began executing node test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194
+[0m18:48:20.071814 [debug] [Thread-1 (]: Began compiling node test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb
+[0m18:48:20.076333 [debug] [Thread-2 (]: Writing runtime sql for node "test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194"
+[0m18:48:20.085844 [debug] [Thread-1 (]: Writing injected SQL for node "test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb"
+[0m18:48:20.089853 [debug] [Thread-2 (]: Using duckdb connection "test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194"
+[0m18:48:20.090845 [debug] [Thread-2 (]: On test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194: BEGIN
+[0m18:48:20.091843 [debug] [Thread-1 (]: Began executing node test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb
+[0m18:48:20.091843 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m18:48:20.099354 [debug] [Thread-1 (]: Writing runtime sql for node "test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb"
+[0m18:48:20.103422 [debug] [Thread-1 (]: Using duckdb connection "test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb"
+[0m18:48:20.104429 [debug] [Thread-1 (]: On test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb: BEGIN
+[0m18:48:20.105427 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m18:48:20.118937 [debug] [Thread-2 (]: SQL status: OK in 0.027 seconds
+[0m18:48:20.119935 [debug] [Thread-1 (]: SQL status: OK in 0.014 seconds
+[0m18:48:20.120939 [debug] [Thread-2 (]: Using duckdb connection "test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194"
+[0m18:48:20.121936 [debug] [Thread-1 (]: Using duckdb connection "test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb"
+[0m18:48:20.121936 [debug] [Thread-2 (]: On test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select ano
+from "econ"."main"."gld_painel_macro"
+where ano is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m18:48:20.124458 [debug] [Thread-1 (]: On test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select indicador
+from "econ"."main"."gld_serie_mensal"
+where indicador is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m18:48:20.126457 [debug] [Thread-2 (]: SQL status: OK in 0.001 seconds
+[0m18:48:20.127461 [debug] [Thread-1 (]: SQL status: OK in 0.001 seconds
+[0m18:48:20.128457 [debug] [Thread-2 (]: On test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194: ROLLBACK
+[0m18:48:20.130456 [debug] [Thread-1 (]: On test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb: ROLLBACK
+[0m18:48:20.131458 [debug] [Thread-2 (]: Failed to rollback 'test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194'
+[0m18:48:20.132455 [debug] [Thread-1 (]: Failed to rollback 'test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb'
+[0m18:48:20.132455 [debug] [Thread-2 (]: On test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194: Close
+[0m18:48:20.133458 [debug] [Thread-1 (]: On test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb: Close
+[0m18:48:20.135092 [info ] [Thread-2 (]: 3 of 7 PASS not_null_gld_painel_macro_ano ...................................... [[32mPASS[0m in 0.08s]
+[0m18:48:20.137101 [debug] [Thread-2 (]: Finished running node test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194
+[0m18:48:20.138101 [debug] [Thread-2 (]: Began running node test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806
+[0m18:48:20.139099 [info ] [Thread-1 (]: 4 of 7 PASS not_null_gld_serie_mensal_indicador ................................ [[32mPASS[0m in 0.07s]
+[0m18:48:20.140102 [info ] [Thread-2 (]: 5 of 7 START test not_null_gld_serie_mensal_valor .............................. [RUN]
+[0m18:48:20.141102 [debug] [Thread-1 (]: Finished running node test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb
+[0m18:48:20.142101 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly test.econ_pipeline.not_null_gld_painel_macro_ano.9dd465a194, now test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806)
+[0m18:48:20.143607 [debug] [Thread-1 (]: Began running node test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529
+[0m18:48:20.144613 [debug] [Thread-2 (]: Began compiling node test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806
+[0m18:48:20.145615 [info ] [Thread-1 (]: 6 of 7 START test unique_gld_correlacoes_ano ................................... [RUN]
+[0m18:48:20.149615 [debug] [Thread-2 (]: Writing injected SQL for node "test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806"
+[0m18:48:20.150616 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.econ_pipeline.not_null_gld_serie_mensal_indicador.415e118aeb, now test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529)
+[0m18:48:20.152613 [debug] [Thread-1 (]: Began compiling node test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529
+[0m18:48:20.153618 [debug] [Thread-2 (]: Began executing node test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806
+[0m18:48:20.159889 [debug] [Thread-1 (]: Writing injected SQL for node "test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529"
+[0m18:48:20.161890 [debug] [Thread-2 (]: Writing runtime sql for node "test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806"
+[0m18:48:20.164401 [debug] [Thread-1 (]: Began executing node test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529
+[0m18:48:20.169404 [debug] [Thread-1 (]: Writing runtime sql for node "test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529"
+[0m18:48:20.171401 [debug] [Thread-2 (]: Using duckdb connection "test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806"
+[0m18:48:20.173404 [debug] [Thread-2 (]: On test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806: BEGIN
+[0m18:48:20.174459 [debug] [Thread-1 (]: Using duckdb connection "test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529"
+[0m18:48:20.175461 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m18:48:20.176469 [debug] [Thread-1 (]: On test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529: BEGIN
+[0m18:48:20.178467 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m18:48:20.201520 [debug] [Thread-1 (]: SQL status: OK in 0.023 seconds
+[0m18:48:20.201520 [debug] [Thread-2 (]: SQL status: OK in 0.026 seconds
+[0m18:48:20.202516 [debug] [Thread-1 (]: Using duckdb connection "test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529"
+[0m18:48:20.203518 [debug] [Thread-2 (]: Using duckdb connection "test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806"
+[0m18:48:20.204732 [debug] [Thread-1 (]: On test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+select
+    ano as unique_field,
+    count(*) as n_records
+
+from "econ"."main"."gld_correlacoes"
+where ano is not null
+group by ano
+having count(*) > 1
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m18:48:20.205730 [debug] [Thread-2 (]: On test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select valor
+from "econ"."main"."gld_serie_mensal"
+where valor is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m18:48:20.209715 [debug] [Thread-1 (]: SQL status: OK in 0.003 seconds
+[0m18:48:20.210716 [debug] [Thread-2 (]: SQL status: OK in 0.003 seconds
+[0m18:48:20.211719 [debug] [Thread-1 (]: On test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529: ROLLBACK
+[0m18:48:20.214248 [debug] [Thread-2 (]: On test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806: ROLLBACK
+[0m18:48:20.215232 [debug] [Thread-1 (]: Failed to rollback 'test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529'
+[0m18:48:20.217239 [debug] [Thread-2 (]: Failed to rollback 'test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806'
+[0m18:48:20.218233 [debug] [Thread-1 (]: On test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529: Close
+[0m18:48:20.219233 [debug] [Thread-2 (]: On test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806: Close
+[0m18:48:20.220232 [info ] [Thread-1 (]: 6 of 7 PASS unique_gld_correlacoes_ano ......................................... [[32mPASS[0m in 0.07s]
+[0m18:48:20.221231 [debug] [Thread-1 (]: Finished running node test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529
+[0m18:48:20.222232 [debug] [Thread-1 (]: Began running node test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff
+[0m18:48:20.222232 [info ] [Thread-1 (]: 7 of 7 START test unique_gld_painel_macro_ano .................................. [RUN]
+[0m18:48:20.223739 [info ] [Thread-2 (]: 5 of 7 PASS not_null_gld_serie_mensal_valor .................................... [[32mPASS[0m in 0.08s]
+[0m18:48:20.224742 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.econ_pipeline.unique_gld_correlacoes_ano.eb36422529, now test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff)
+[0m18:48:20.225741 [debug] [Thread-2 (]: Finished running node test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806
+[0m18:48:20.226741 [debug] [Thread-1 (]: Began compiling node test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff
+[0m18:48:20.237410 [debug] [Thread-1 (]: Writing injected SQL for node "test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff"
+[0m18:48:20.239409 [debug] [Thread-1 (]: Began executing node test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff
+[0m18:48:20.243407 [debug] [Thread-1 (]: Writing runtime sql for node "test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff"
+[0m18:48:20.245617 [debug] [Thread-1 (]: Using duckdb connection "test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff"
+[0m18:48:20.246619 [debug] [Thread-1 (]: On test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff: BEGIN
+[0m18:48:20.246619 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m18:48:20.275301 [debug] [Thread-1 (]: SQL status: OK in 0.028 seconds
+[0m18:48:20.276294 [debug] [Thread-1 (]: Using duckdb connection "test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff"
+[0m18:48:20.277295 [debug] [Thread-1 (]: On test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff: /* {"app": "dbt", "dbt_version": "1.11.7", "profile_name": "econ_pipeline", "target_name": "dev", "node_id": "test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+select
+    ano as unique_field,
+    count(*) as n_records
+
+from "econ"."main"."gld_painel_macro"
+where ano is not null
+group by ano
+having count(*) > 1
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m18:48:20.281295 [debug] [Thread-1 (]: SQL status: OK in 0.002 seconds
+[0m18:48:20.285813 [debug] [Thread-1 (]: On test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff: ROLLBACK
+[0m18:48:20.287815 [debug] [Thread-1 (]: Failed to rollback 'test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff'
+[0m18:48:20.288815 [debug] [Thread-1 (]: On test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff: Close
+[0m18:48:20.294324 [info ] [Thread-1 (]: 7 of 7 PASS unique_gld_painel_macro_ano ........................................ [[32mPASS[0m in 0.07s]
+[0m18:48:20.295325 [debug] [Thread-1 (]: Finished running node test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff
+[0m18:48:20.297324 [debug] [MainThread]: Using duckdb connection "master"
+[0m18:48:20.298323 [debug] [MainThread]: On master: BEGIN
+[0m18:48:20.300325 [debug] [MainThread]: Opening a new connection, currently in state closed
+[0m18:48:20.319909 [debug] [MainThread]: SQL status: OK in 0.020 seconds
+[0m18:48:20.320908 [debug] [MainThread]: On master: COMMIT
+[0m18:48:20.321909 [debug] [MainThread]: Using duckdb connection "master"
+[0m18:48:20.321909 [debug] [MainThread]: On master: COMMIT
+[0m18:48:20.323416 [debug] [MainThread]: SQL status: OK in 0.001 seconds
+[0m18:48:20.325423 [debug] [MainThread]: On master: Close
+[0m18:48:20.329422 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m18:48:20.330422 [debug] [MainThread]: Connection 'list_econ_main' was properly closed.
+[0m18:48:20.331422 [debug] [MainThread]: Connection 'test.econ_pipeline.unique_gld_painel_macro_ano.a3dfb6e1ff' was properly closed.
+[0m18:48:20.332422 [debug] [MainThread]: Connection 'test.econ_pipeline.not_null_gld_serie_mensal_valor.b19bb57806' was properly closed.
+[0m18:48:20.333423 [info ] [MainThread]: 
+[0m18:48:20.333928 [info ] [MainThread]: Finished running 7 data tests in 0 hours 0 minutes and 0.74 seconds (0.74s).
+[0m18:48:20.337444 [debug] [MainThread]: Command end result
+[0m18:48:20.381439 [debug] [MainThread]: Wrote artifact WritableManifest to .\target\manifest.json
+[0m18:48:20.386976 [debug] [MainThread]: Wrote artifact SemanticManifest to .\target\semantic_manifest.json
+[0m18:48:20.402618 [debug] [MainThread]: Wrote artifact RunExecutionResult to .\target\run_results.json
+[0m18:48:20.403623 [info ] [MainThread]: 
+[0m18:48:20.404632 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m18:48:20.405990 [info ] [MainThread]: 
+[0m18:48:20.407003 [info ] [MainThread]: Done. PASS=7 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=7
+[0m18:48:20.410999 [debug] [MainThread]: Command `dbt test` succeeded at 18:48:20.410001 after 2.63 seconds
+[0m18:48:20.411999 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FEE032D4D0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FEE032C790>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x000001FEDA431390>]}
+[0m18:48:20.411999 [debug] [MainThread]: Flushing usage events
+[0m18:48:21.352330 [debug] [MainThread]: An error was encountered while trying to flush usage events
