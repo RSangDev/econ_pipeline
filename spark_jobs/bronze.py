@@ -1,39 +1,29 @@
 """
 spark_jobs/bronze.py
 Ingere os CSVs das APIs no Delta Lake Bronze.
-Cada fonte tem seu próprio path particionado por fonte/ano.
 """
 import os, sys, logging
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from _winutils import setup; setup()
-from pyspark.sql import SparkSession
+# Garante que a raiz do projeto está no path antes de qualquer import local
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
+
+# Import direto do arquivo — evita problemas de resolução de pacote
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from spark_session import get_spark
+
 from pyspark.sql import functions as F
 from pyspark.sql.types import StructType, StructField, StringType, DoubleType, IntegerType
-from delta import configure_spark_with_delta_pip
+from delta.tables import DeltaTable
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
-ROOT      = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT      = _ROOT
 RAW_DIR   = os.path.join(ROOT, "data", "raw")
 DELTA_DIR = os.path.join(ROOT, "data", "delta")
 
-
-def get_spark():
-    builder = (
-        SparkSession.builder.appName("econ_bronze")
-        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-        .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-        .config("spark.driver.memory", "2g")
-        .config("spark.sql.shuffle.partitions", "4")
-    )
-    spark = configure_spark_with_delta_pip(builder).getOrCreate()
-    spark.sparkContext.setLogLevel("WARN")
-    return spark
-
-
-# Schema base para séries temporais (BCB, IPEA)
 SERIE_SCHEMA = StructType([
     StructField("fonte",     StringType(), True),
     StructField("indicador", StringType(), True),
@@ -45,7 +35,6 @@ SERIE_SCHEMA = StructType([
     StructField("dt_carga",  StringType(), True),
 ])
 
-# Schema para PIB (trimestral)
 PIB_SCHEMA = StructType([
     StructField("fonte",     StringType(), True),
     StructField("indicador", StringType(), True),
@@ -69,7 +58,7 @@ FONTES = {
 
 
 def ingest_bronze(fontes: list = None):
-    spark = get_spark()
+    spark  = get_spark("econ_bronze")
     fontes = fontes or list(FONTES.keys())
 
     for fonte in fontes:
@@ -79,21 +68,22 @@ def ingest_bronze(fontes: list = None):
             continue
 
         schema, grupo = FONTES[fonte]
-        delta_path = os.path.join(DELTA_DIR, "bronze", grupo)
+        delta_path    = os.path.join(DELTA_DIR, "bronze", grupo)
 
         logger.info(f"Bronze: {fonte} → {delta_path}")
 
-        df = (
-            spark.read
-            .option("header", "true")
-            .option("inferSchema", schema is None)
-            .csv(csv_path) if schema is None
-            else spark.read.option("header", "true").schema(schema).csv(csv_path)
-        )
+        if schema is None:
+            df = spark.read.option("header", "true").option("inferSchema", "true").csv(csv_path)
+        else:
+            df = spark.read.option("header", "true").schema(schema).csv(csv_path)
+
+        if df.count() == 0:
+            logger.warning(f"  CSV vazio para {fonte}, pulando")
+            continue
 
         df = (df
-            .withColumn("_source",      F.lit(fonte))
-            .withColumn("_loaded_at",   F.current_timestamp())
+            .withColumn("_source",    F.lit(fonte))
+            .withColumn("_loaded_at", F.current_timestamp())
         )
 
         (
@@ -103,7 +93,6 @@ def ingest_bronze(fontes: list = None):
             .option("mergeSchema", "true")
             .save(delta_path)
         )
-
         logger.info(f"  → {df.count()} registros escritos")
 
     spark.stop()

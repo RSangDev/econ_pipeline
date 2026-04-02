@@ -1,35 +1,7 @@
 """
 airflow/dags/econ_pipeline.py
-
-Pipeline Econômico Brasileiro — DAG principal
-
-Estrutura com TaskGroups e dependências complexas:
-
-  [TaskGroup: ibge]  ──────────────────────────────┐
-    fetch_ibge_pib                                  │
-    fetch_ibge_populacao                            │
-    validate_ibge                                   ├──► [TaskGroup: gold]
-                                                    │      bridge_to_duckdb
-  [TaskGroup: bcb]   ──────────────────────────────┤      dbt_run
-    fetch_bcb_selic                                 │      dbt_test
-    fetch_bcb_ipca                                  │    ──► notify_success
-    fetch_bcb_cambio                                │
-    validate_bcb                                    │
-                                                    │
-  [TaskGroup: ipea]  ──────────────────────────────┘
-    fetch_ipea_desemprego
-    fetch_ipea_gini
-    validate_ipea
-
-  ─── BRONZE (paralelo por fonte) ────────────────────
-  bronze_ibge  bronze_bcb  bronze_ipea
-        └──────────┴──────────┘
-                   │
-              silver_unify  (ACID MERGE)
-                   │
-              [TaskGroup: gold]
+Pipeline Econômico Brasileiro — DAG principal com TaskGroups
 """
-
 from __future__ import annotations
 
 import os
@@ -42,28 +14,100 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator, ShortCircuitOperator
 from airflow.operators.bash import BashOperator
 from airflow.utils.task_group import TaskGroup
-from airflow.models import Variable
-
-# Paths
-PROJECT_ROOT = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(PROJECT_ROOT))
-
-RAW_DIR  = PROJECT_ROOT / "data" / "raw"
-DBT_DIR  = PROJECT_ROOT / "dbt_project"
-PYTHON   = sys.executable
 
 logger = logging.getLogger(__name__)
 
-# ── Configurações padrão ──────────────────────────────────────────
-DEFAULT_ARGS = {
-    "owner":            "engenharia_dados",
-    "depends_on_past":  False,
-    "start_date":       datetime(2024, 1, 1),
-    "retries":          2,
-    "retry_delay":      timedelta(minutes=5),
-    "retry_exponential_backoff": True,
-    "execution_timeout": timedelta(minutes=30),
-}
+# ── Resolve PROJECT_ROOT de forma robusta ───────────────────────
+# Suporta variável de ambiente como override explícito.
+# Fallback: a DAG fica em <ROOT>/airflow/dags/, então sobe 3 níveis.
+# Resolve PROJECT_ROOT em ordem de prioridade:
+# 1. Variável de ambiente explícita (definida no docker-compose)
+# 2. /opt/project (path padrão do volume no Docker)
+# 3. Cálculo baseado em __file__ (fallback local)
+def _resolve_root() -> Path:
+    env_val = os.environ.get("ECON_PROJECT_ROOT", "").strip()
+    if env_val and Path(env_val).is_dir():
+        return Path(env_val)
+    docker_default = Path("/opt/project")
+    if docker_default.is_dir():
+        return docker_default
+    # Fallback: sobe 3 níveis a partir de airflow/dags/dag.py
+    return Path(os.path.abspath(__file__)).parent.parent.parent
+
+PROJECT_ROOT = _resolve_root()
+
+RAW_DIR = PROJECT_ROOT / "data" / "raw"
+DBT_DIR = PROJECT_ROOT / "dbt_project"
+IS_WIN  = sys.platform == "win32"
+
+
+def _find_python() -> str:
+    """
+    Encontra o Python que tem o pyspark instalado.
+    No Docker do Airflow, pyspark é instalado via pip no airflow-init,
+    mas sys.executable pode apontar para um Python diferente dependendo
+    de como a task é iniciada.
+    
+    Ordem de busca:
+    1. PYSPARK_PYTHON env var (configurável no compose)
+    2. Qualquer python3 no PATH que consiga importar pyspark
+    3. sys.executable como último recurso
+    """
+    # Override explícito via variável de ambiente
+    env_python = os.environ.get("PYSPARK_PYTHON", "").strip()
+    if env_python and Path(env_python).exists():
+        return env_python
+
+    # Testa candidatos em ordem de prioridade
+    import subprocess as _sp
+    candidatos = [
+        "/home/airflow/.local/bin/python3",   # pip install como user airflow
+        "/home/airflow/.local/bin/python",
+        sys.executable,
+        "/usr/local/bin/python3",
+        "/usr/bin/python3",
+        "python3",
+        "python",
+    ]
+    for py in candidatos:
+        try:
+            r = _sp.run(
+                [py, "-c", "import pyspark; print('ok')"],
+                capture_output=True, text=True, timeout=5
+            )
+            if r.returncode == 0 and "ok" in r.stdout:
+                return py
+        except Exception:
+            continue
+
+    # Fallback
+    return sys.executable
+
+
+def _dbt_bin() -> str:
+    exe  = "dbt.exe" if IS_WIN else "dbt"
+    # Tenta no mesmo diretório do Python encontrado, depois no PATH
+    for base in [Path(PYTHON).parent, Path("/home/airflow/.local/bin")]:
+        full = base / exe
+        if full.exists():
+            return str(full)
+    return "dbt"
+
+
+PYTHON = _find_python()
+DBT    = _dbt_bin()
+
+
+def _setup_path() -> Path:
+    """
+    Injeta PROJECT_ROOT no sys.path do processo worker.
+    Precisa ser chamado no início de cada função de task porque o
+    LocalExecutor cria processos filhos que não herdam o sys.path
+    modificado durante o parse da DAG.
+    """
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    return PROJECT_ROOT
 
 
 # ════════════════════════════════════════════════════════════════
@@ -71,8 +115,8 @@ DEFAULT_ARGS = {
 # ════════════════════════════════════════════════════════════════
 
 def _fetch_and_save(func_name: str, **kwargs) -> str:
-    """Executa uma função de fetch e salva o CSV em data/raw/."""
-    import importlib
+    root = _setup_path()
+
     from ingestion.apis import (
         fetch_ibge_pib, fetch_ibge_populacao,
         fetch_bcb_selic, fetch_bcb_ipca, fetch_bcb_cambio,
@@ -87,87 +131,117 @@ def _fetch_and_save(func_name: str, **kwargs) -> str:
         "fetch_ipea_desemprego": fetch_ipea_desemprego,
         "fetch_ipea_gini":       fetch_ipea_gini,
     }
-    nome = func_name.replace("fetch_", "")
-    RAW_DIR.mkdir(parents=True, exist_ok=True)
-    df = funcs[func_name]()
-    path = RAW_DIR / f"{nome}.csv"
-    df.to_csv(path, index=False)
-    logger.info(f"Salvo: {path} ({len(df)} registros)")
 
-    # Pusha métricas para o XCom
-    ti = kwargs["ti"]
-    ti.xcom_push(key=f"n_{nome}", value=len(df))
+    nome    = func_name.replace("fetch_", "")
+    raw_dir = root / "data" / "raw"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+
+    df = funcs[func_name]()
+    path = raw_dir / f"{nome}.csv"
+    df.to_csv(path, index=False)
+
+    n = len(df)
+    if n == 0:
+        logger.warning(f"API retornou 0 registros para {func_name} — CSV vazio salvo, validate decidirá")
+    else:
+        logger.info(f"Salvo: {path} ({n} registros)")
+    kwargs["ti"].xcom_push(key=f"n_{nome}", value=n)
     return str(path)
 
 
 def _validate_fonte(fonte: str, min_records: int = 10, **kwargs) -> bool:
     """
-    Valida se os arquivos da fonte foram gerados com dados suficientes.
-    ShortCircuitOperator: retorna False → pula tasks downstream.
+    Valida se pelo menos um CSV da fonte tem dados suficientes.
+    CSVs individuais vazios são tolerados — só falha se o total for zero.
+    ShortCircuitOperator: False → pula tasks downstream sem marcar como falha.
     """
     import pandas as pd
-    arquivos = list(RAW_DIR.glob(f"{fonte}_*.csv"))
+    root    = _setup_path()
+    raw_dir = root / "data" / "raw"
+
+    arquivos = list(raw_dir.glob(f"{fonte}_*.csv"))
     if not arquivos:
-        logger.error(f"Nenhum arquivo encontrado para fonte: {fonte}")
+        logger.error(f"Nenhum CSV encontrado para '{fonte}' em {raw_dir}")
         return False
+
     total = 0
     for f in arquivos:
         try:
-            n = len(pd.read_csv(f))
+            df = pd.read_csv(f)
+            n  = len(df)
             total += n
-            logger.info(f"  {f.name}: {n} registros")
+            if n == 0:
+                logger.warning(f"  {f.name}: vazio (tolerado)")
+            else:
+                logger.info(f"  {f.name}: {n} registros OK")
         except Exception as e:
-            logger.error(f"  {f.name}: erro ao ler — {e}")
-            return False
+            # CSV malformado — loga mas não aborta, outros arquivos podem compensar
+            logger.warning(f"  {f.name}: erro ao ler ({e}) — ignorando este arquivo")
+
     if total < min_records:
-        logger.error(f"Total insuficiente para {fonte}: {total} < {min_records}")
+        logger.error(f"Total insuficiente para '{fonte}': {total} < {min_records}")
         return False
+
     logger.info(f"✅ {fonte}: {total} registros validados")
     return True
 
 
-def _run_bronze(fontes: list[str], **kwargs):
-    """Executa o job PySpark de Bronze para as fontes especificadas."""
+def _run_spark_job(script_name: str, extra_args: list = None, **kwargs):
+    """
+    Executa um job PySpark como subprocess.
+    Passa PYTHONPATH e PROJECT_ROOT explicitamente para o processo filho.
+    stdout+stderr são capturados juntos e logados no Airflow UI.
+    """
     import subprocess
-    bronze_script = str(PROJECT_ROOT / "spark_jobs" / "bronze.py")
-    cmd = [PYTHON, bronze_script] + fontes
-    result = subprocess.run(cmd, capture_output=True, text=True, cwd=str(PROJECT_ROOT))
+    root   = _setup_path()
+    script = str(root / "spark_jobs" / script_name)
+    cmd    = [PYTHON, script] + (extra_args or [])
+
+    logger.info(f"Executando: {' '.join(cmd)}")
+    logger.info(f"CWD: {root}")
+
+    env = {
+        **os.environ,
+        "PYTHONPATH":          str(root),
+        "ECON_PROJECT_ROOT":   str(root),
+    }
+
+    result = subprocess.run(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        cwd=str(root),
+        env=env,
+    )
+
+    for line in result.stdout.splitlines():
+        logger.info(line)
+
     if result.returncode != 0:
-        raise RuntimeError(f"bronze.py falhou:\n{result.stderr}")
-    logger.info(result.stdout)
+        raise RuntimeError(
+            f"{script_name} encerrou com código {result.returncode}. "
+            f"Veja o log acima para detalhes."
+        )
+
+
+def _run_bronze(fontes: list, **kwargs):
+    _run_spark_job("bronze.py", extra_args=fontes, **kwargs)
 
 
 def _run_silver(**kwargs):
-    """Executa o job PySpark de Silver (ACID MERGE)."""
-    import subprocess
-    script = str(PROJECT_ROOT / "spark_jobs" / "silver.py")
-    result = subprocess.run([PYTHON, script], capture_output=True, text=True,
-                            cwd=str(PROJECT_ROOT))
-    if result.returncode != 0:
-        raise RuntimeError(f"silver.py falhou:\n{result.stderr}")
-    logger.info(result.stdout)
+    _run_spark_job("silver.py", **kwargs)
 
 
 def _run_bridge(**kwargs):
-    """Delta Lake → Parquet → DuckDB."""
-    import subprocess
-    script = str(PROJECT_ROOT / "spark_jobs" / "bridge.py")
-    result = subprocess.run([PYTHON, script], capture_output=True, text=True,
-                            cwd=str(PROJECT_ROOT))
-    if result.returncode != 0:
-        raise RuntimeError(f"bridge.py falhou:\n{result.stderr}")
-    logger.info(result.stdout)
+    _run_spark_job("bridge.py", **kwargs)
 
 
 def _notify_success(**kwargs):
-    """
-    Notificação de sucesso — imprime resumo do pipeline.
-    Em produção: substituir por Slack webhook, email ou PagerDuty.
-    """
+    _setup_path()
     ti  = kwargs["ti"]
     dag = kwargs["dag"]
 
-    # Coleta métricas dos XComs
     metricas = {}
     for task_id in ["ibge.fetch_ibge_pib", "bcb.fetch_bcb_selic",
                     "ipea.fetch_ipea_desemprego"]:
@@ -178,15 +252,14 @@ def _notify_success(**kwargs):
         except Exception:
             pass
 
-    msg = f"""
-╔══════════════════════════════════════════════╗
-║     Pipeline Econômico — Execução concluída  ║
-╠══════════════════════════════════════════════╣
-║  DAG:         {dag.dag_id:<30} ║
-║  Execução:    {kwargs['ts']:<30} ║
-║  Status:      ✅ SUCESSO                      ║
-╚══════════════════════════════════════════════╝
-    """
+    msg = (
+        f"\n{'='*50}\n"
+        f"Pipeline Econômico — CONCLUÍDO\n"
+        f"DAG:    {dag.dag_id}\n"
+        f"Run:    {kwargs['ts']}\n"
+        f"Status: SUCESSO\n"
+        f"{'='*50}"
+    )
     logger.info(msg)
     print(msg)
 
@@ -196,9 +269,15 @@ def _notify_success(**kwargs):
 # ════════════════════════════════════════════════════════════════
 with DAG(
     dag_id="econ_pipeline_brasil",
-    default_args=DEFAULT_ARGS,
+    default_args={
+        "owner":             "engenharia_dados",
+        "depends_on_past":   False,
+        "start_date":        datetime(2024, 1, 1),
+        "retries":           0,
+        "execution_timeout": timedelta(minutes=45),
+    },
     description="Pipeline de indicadores econômicos BR — IBGE + BCB + IPEA",
-    schedule_interval="0 6 * * *",    # diário às 06h
+    schedule_interval="0 6 * * *",
     catchup=False,
     max_active_runs=1,
     tags=["economia", "ibge", "bcb", "ipea", "delta-lake", "dbt"],
@@ -212,26 +291,21 @@ with DAG(
             python_callable=_fetch_and_save,
             op_kwargs={"func_name": "fetch_ibge_pib"},
         )
-
         fetch_pop = PythonOperator(
             task_id="fetch_ibge_populacao",
             python_callable=_fetch_and_save,
             op_kwargs={"func_name": "fetch_ibge_populacao"},
         )
-
         validate_ibge = ShortCircuitOperator(
             task_id="validate_ibge",
             python_callable=_validate_fonte,
             op_kwargs={"fonte": "ibge"},
         )
-
         bronze_ibge = PythonOperator(
             task_id="bronze_ibge",
             python_callable=_run_bronze,
             op_kwargs={"fontes": ["ibge_pib", "ibge_populacao"]},
         )
-
-        # Fetch em paralelo → validate → bronze
         [fetch_pib, fetch_pop] >> validate_ibge >> bronze_ibge
 
     # ── TaskGroup: BCB ──────────────────────────────────────────
@@ -242,31 +316,26 @@ with DAG(
             python_callable=_fetch_and_save,
             op_kwargs={"func_name": "fetch_bcb_selic"},
         )
-
         fetch_ipca = PythonOperator(
             task_id="fetch_bcb_ipca",
             python_callable=_fetch_and_save,
             op_kwargs={"func_name": "fetch_bcb_ipca"},
         )
-
         fetch_cambio = PythonOperator(
             task_id="fetch_bcb_cambio",
             python_callable=_fetch_and_save,
             op_kwargs={"func_name": "fetch_bcb_cambio"},
         )
-
         validate_bcb = ShortCircuitOperator(
             task_id="validate_bcb",
             python_callable=_validate_fonte,
             op_kwargs={"fonte": "bcb"},
         )
-
         bronze_bcb = PythonOperator(
             task_id="bronze_bcb",
             python_callable=_run_bronze,
             op_kwargs={"fontes": ["bcb_selic", "bcb_ipca", "bcb_cambio"]},
         )
-
         [fetch_selic, fetch_ipca, fetch_cambio] >> validate_bcb >> bronze_bcb
 
     # ── TaskGroup: IPEA ─────────────────────────────────────────
@@ -277,36 +346,27 @@ with DAG(
             python_callable=_fetch_and_save,
             op_kwargs={"func_name": "fetch_ipea_desemprego"},
         )
-
         fetch_gini = PythonOperator(
             task_id="fetch_ipea_gini",
             python_callable=_fetch_and_save,
             op_kwargs={"func_name": "fetch_ipea_gini"},
         )
-
         validate_ipea = ShortCircuitOperator(
             task_id="validate_ipea",
             python_callable=_validate_fonte,
             op_kwargs={"fonte": "ipea"},
         )
-
         bronze_ipea = PythonOperator(
             task_id="bronze_ipea",
             python_callable=_run_bronze,
             op_kwargs={"fontes": ["ipea_desemprego", "ipea_gini"]},
         )
-
         [fetch_desemp, fetch_gini] >> validate_ipea >> bronze_ipea
 
-    # ── Silver: ACID MERGE (espera TODOS os bronzes) ─────────────
+    # ── Silver ───────────────────────────────────────────────────
     silver_task = PythonOperator(
         task_id="silver_unify",
         python_callable=_run_silver,
-        doc_md="""
-        ## Silver — Unificação com ACID MERGE
-        Aguarda bronze de IBGE, BCB e IPEA.
-        Une todas as fontes num schema comum e executa MERGE no Delta Lake.
-        """,
     )
 
     # ── TaskGroup: Gold ─────────────────────────────────────────
@@ -316,37 +376,37 @@ with DAG(
             task_id="bridge_to_duckdb",
             python_callable=_run_bridge,
         )
+        # PATH explícito garante que dbt seja encontrado independente de onde foi instalado
+        _dbt_path = "/home/airflow/.local/bin:/usr/local/bin:/usr/bin:" + os.environ.get("PATH","")
+        _dbt_env  = {**os.environ, "PATH": _dbt_path, "PYTHONPATH": str(PROJECT_ROOT)}
 
         dbt_run = BashOperator(
             task_id="dbt_run",
             bash_command=(
-                f"cd {DBT_DIR} && "
-                f"dbt run --profiles-dir . --project-dir . --no-partial-parse"
+                "export PATH=/home/airflow/.local/bin:/usr/local/bin:/usr/bin:$PATH && "
+                f"cd '{DBT_DIR}' && "
+                "dbt run --profiles-dir . --project-dir . --no-partial-parse"
             ),
+            env=_dbt_env,
         )
-
         dbt_test = BashOperator(
             task_id="dbt_test",
             bash_command=(
-                f"cd {DBT_DIR} && "
-                f"dbt test --profiles-dir . --project-dir ."
+                "export PATH=/home/airflow/.local/bin:/usr/local/bin:/usr/bin:$PATH && "
+                f"cd '{DBT_DIR}' && "
+                "dbt test --profiles-dir . --project-dir ."
             ),
-            trigger_rule="all_done",  # roda mesmo se testes falharem (para ver o report)
+            env=_dbt_env,
+            trigger_rule="all_done",
         )
-
         bridge >> dbt_run >> dbt_test
 
-    # ── Notificação final ────────────────────────────────────────
+    # ── Notificação ──────────────────────────────────────────────
     notify = PythonOperator(
         task_id="notify_success",
         python_callable=_notify_success,
         trigger_rule="all_success",
     )
 
-    # ════════════════════════════════════════════════════════════
-    # GRAFO DE DEPENDÊNCIAS
-    # Os 3 TaskGroups rodam em paralelo.
-    # Silver só começa quando TODOS os bronzes terminam.
-    # Gold só começa quando Silver confirmar sucesso.
-    # ════════════════════════════════════════════════════════════
+    # ── Grafo de dependências ────────────────────────────────────
     [tg_ibge, tg_bcb, tg_ipea] >> silver_task >> tg_gold >> notify

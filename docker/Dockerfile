@@ -10,18 +10,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
-# Cria o diretório ivy2 com permissões corretas ANTES de qualquer uso do Spark
 RUN mkdir -p /home/airflow/.ivy2/cache /home/airflow/.ivy2/jars \
-    && chown -R airflow:airflow /home/airflow/.ivy2
+    && chown -R airflow /home/airflow/.ivy2
 
-# Pré-baixa os JARs do Delta Lake para evitar race condition do Ivy em runtime
 RUN mkdir -p /opt/spark-jars \
     && curl -L -o /opt/spark-jars/delta-spark_2.12-3.2.0.jar \
        https://repo1.maven.org/maven2/io/delta/delta-spark_2.12/3.2.0/delta-spark_2.12-3.2.0.jar \
     && curl -L -o /opt/spark-jars/delta-storage-3.2.0.jar \
        https://repo1.maven.org/maven2/io/delta/delta-storage/3.2.0/delta-storage-3.2.0.jar \
-    && chown -R airflow:airflow /opt/spark-jars
-
+    && chown -R airflow /opt/spark-jars
 USER airflow
 
 RUN pip install --no-cache-dir \
@@ -30,8 +27,8 @@ RUN pip install --no-cache-dir \
     delta-spark==3.2.0 \
     protobuf==4.25.3 \
     dbt-duckdb==1.8.1 \
-    duckdb==0.10.3 \
-    pandas==2.2.0 \
+    duckdb \
+    pandas \
     requests==2.31.0
 
 ENV PYSPARK_PYTHON="/home/airflow/.local/bin/python3"

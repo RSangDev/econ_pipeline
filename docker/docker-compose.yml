@@ -54,8 +54,7 @@ services:
     command: >
       bash -c "
         airflow db migrate &&
-        airflow users create --username admin --password admin
-          --firstname Admin --lastname User --role Admin --email admin@local.com
+        airflow users create --username admin --password admin --firstname admin --lastname user --role Admin --email admin@local.com
       "
     restart: "no"
 

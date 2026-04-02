@@ -10,3 +10,4 @@ requests==2.31.0
 streamlit==1.55.0
 plotly==5.19.0
 python-dotenv==1.0.1
+protobuf==4.25.3

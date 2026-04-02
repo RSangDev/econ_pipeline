@@ -1,80 +1,54 @@
 """
 spark_jobs/silver.py
 Transforma Bronze → Silver com ACID MERGE.
-Cada indicador é limpo, enriquecido e unificado num schema comum.
 """
 import os, sys, logging
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from _winutils import setup; setup()
-from pyspark.sql import SparkSession, DataFrame
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from spark_session import get_spark
+
+from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
-from delta import configure_spark_with_delta_pip
 from delta.tables import DeltaTable
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
-ROOT      = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DELTA_DIR = os.path.join(ROOT, "data", "delta")
+ROOT        = _ROOT
+DELTA_DIR   = os.path.join(ROOT, "data", "delta")
 SILVER_PATH = os.path.join(DELTA_DIR, "silver", "indicadores")
 
 
-def get_spark():
-    builder = (
-        SparkSession.builder.appName("econ_silver")
-        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-        .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-        .config("spark.driver.memory", "2g")
-        .config("spark.sql.shuffle.partitions", "4")
-    )
-    spark = configure_spark_with_delta_pip(builder).getOrCreate()
-    spark.sparkContext.setLogLevel("WARN")
-    return spark
-
-
-def build_silver(spark: SparkSession) -> DataFrame:
-    """Unifica todas as fontes Bronze num schema Silver comum."""
+def build_silver(spark) -> DataFrame:
     frames = []
 
-    # ── BCB series ────────────────────────────────────────────
-    bcb_path = os.path.join(DELTA_DIR, "bronze", "series_bcb")
-    if DeltaTable.isDeltaTable(spark, bcb_path):
-        bcb = spark.read.format("delta").load(bcb_path)
-        bcb = (bcb
+    for path_key, categoria in [
+        ("series_bcb",  "monetario"),
+        ("series_ipea", "social"),
+    ]:
+        path = os.path.join(DELTA_DIR, "bronze", path_key)
+        if not DeltaTable.isDeltaTable(spark, path):
+            continue
+        df = spark.read.format("delta").load(path)
+        df = (df
             .filter(F.col("valor").isNotNull())
-            .withColumn("categoria", F.lit("monetario"))
+            .withColumn("categoria", F.lit(categoria))
             .withColumn("chave", F.concat_ws("_", F.col("indicador"), F.col("data")))
             .select("chave", "fonte", "indicador", "categoria",
-                    F.col("data").alias("periodo"),
-                    "ano", "mes",
+                    F.col("data").alias("periodo"), "ano", "mes",
                     F.lit(None).cast("int").alias("trimestre"),
                     "valor", "unidade",
                     F.current_timestamp().alias("_silver_at"))
         )
-        frames.append(bcb)
-        logger.info(f"  BCB: {bcb.count()} registros")
+        n = df.count()
+        frames.append(df)
+        logger.info(f"  {path_key}: {n} registros")
 
-    # ── IPEA series ───────────────────────────────────────────
-    ipea_path = os.path.join(DELTA_DIR, "bronze", "series_ipea")
-    if DeltaTable.isDeltaTable(spark, ipea_path):
-        ipea = spark.read.format("delta").load(ipea_path)
-        ipea = (ipea
-            .filter(F.col("valor").isNotNull())
-            .withColumn("categoria", F.lit("social"))
-            .withColumn("chave", F.concat_ws("_", F.col("indicador"), F.col("data")))
-            .select("chave", "fonte", "indicador", "categoria",
-                    F.col("data").alias("periodo"),
-                    "ano", "mes",
-                    F.lit(None).cast("int").alias("trimestre"),
-                    "valor", "unidade",
-                    F.current_timestamp().alias("_silver_at"))
-        )
-        frames.append(ipea)
-        logger.info(f"  IPEA: {ipea.count()} registros")
-
-    # ── IBGE PIB ──────────────────────────────────────────────
     pib_path = os.path.join(DELTA_DIR, "bronze", "pib")
     if DeltaTable.isDeltaTable(spark, pib_path):
         pib = spark.read.format("delta").load(pib_path)
@@ -89,21 +63,32 @@ def build_silver(spark: SparkSession) -> DataFrame:
                     F.current_timestamp().alias("_silver_at"))
         )
         frames.append(pib)
-        logger.info(f"  IBGE PIB: {pib.count()} registros")
+        logger.info(f"  pib: {pib.count()} registros")
 
     if not frames:
-        raise RuntimeError("Nenhuma fonte Bronze encontrada. Rode o Bronze primeiro.")
+        raise RuntimeError("Nenhuma fonte Bronze encontrada.")
 
-    # Union de todos os frames
     silver = frames[0]
     for f in frames[1:]:
-        # Alinha colunas antes do union
         for col in silver.columns:
             if col not in f.columns:
                 f = f.withColumn(col, F.lit(None))
         silver = silver.unionByName(f, allowMissingColumns=True)
 
-    # Enriquecimento: variação YoY por indicador
+    # ── Deduplica pelo campo chave ─────────────────────────────────
+    # O Bronze usa mode=append — múltiplas execuções acumulam linhas.
+    # O MERGE do Delta falha com DELTA_MULTIPLE_SOURCE_ROW_MATCHING_TARGET_ROW
+    # se a mesma chave aparecer mais de uma vez no source.
+    # Solução: pega apenas a versão mais recente de cada chave.
+    window_dedup = Window.partitionBy("chave").orderBy(F.col("_silver_at").desc())
+    silver = (
+        silver
+        .withColumn("_rn", F.row_number().over(window_dedup))
+        .filter(F.col("_rn") == 1)
+        .drop("_rn")
+    )
+
+    # Variação YoY
     window_yoy = Window.partitionBy("indicador", "mes").orderBy("ano")
     silver = silver.withColumn(
         "variacao_yoy",
@@ -112,17 +97,15 @@ def build_silver(spark: SparkSession) -> DataFrame:
             / F.abs(F.lag("valor").over(window_yoy)) * 100, 2
         )
     )
-
     return silver
 
 
 def run_silver():
-    spark = get_spark()
+    spark  = get_spark("econ_silver")
     logger.info("Construindo Silver layer...")
-
     silver = build_silver(spark)
-    n = silver.count()
-    logger.info(f"  → {n} registros unificados")
+    n      = silver.count()
+    logger.info(f"  → {n} registros após deduplicação")
 
     if DeltaTable.isDeltaTable(spark, SILVER_PATH):
         logger.info("MERGE (ACID transaction)...")
@@ -134,6 +117,7 @@ def run_silver():
             .whenNotMatchedInsertAll()
             .execute()
         )
+        logger.info("  → MERGE concluído")
     else:
         (
             silver.write

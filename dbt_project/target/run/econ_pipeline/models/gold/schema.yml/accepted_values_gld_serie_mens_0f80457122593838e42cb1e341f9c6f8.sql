@@ -1,13 +1,9 @@
-
-    
-    select
+select
       count(*) as failures,
       count(*) != 0 as should_warn,
       count(*) != 0 as should_error
     from (
       
-    
-  
     
     
 
@@ -30,7 +26,5 @@ where value_field not in (
 
 
 
-  
-  
       
     ) dbt_internal_test

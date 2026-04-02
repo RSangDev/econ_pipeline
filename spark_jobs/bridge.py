@@ -2,40 +2,50 @@
 spark_jobs/bridge.py
 Exporta Silver Delta → Parquet → DuckDB view para o dbt consumir.
 """
-import os, sys, logging
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import os, sys, logging, shutil
 
-from _winutils import setup; setup()
-from pyspark.sql import SparkSession
-from delta import configure_spark_with_delta_pip
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from spark_session import get_spark
+
 import duckdb
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
-ROOT         = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT         = _ROOT
 DELTA_DIR    = os.path.join(ROOT, "data", "delta")
 SILVER_PATH  = os.path.join(DELTA_DIR, "silver", "indicadores")
 PARQUET_PATH = os.path.join(DELTA_DIR, "parquet", "silver_indicadores")
 DW_PATH      = os.path.join(ROOT, "data", "warehouse", "econ.duckdb")
 
 
-def get_spark():
-    builder = (
-        SparkSession.builder.appName("econ_bridge")
-        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
-        .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-        .config("spark.driver.memory", "2g")
-        .config("spark.sql.shuffle.partitions", "4")
-    )
-    spark = configure_spark_with_delta_pip(builder).getOrCreate()
-    spark.sparkContext.setLogLevel("WARN")
-    return spark
+def _safe_connect(path: str) -> duckdb.DuckDBPyConnection:
+    """
+    Conecta ao DuckDB. Se o arquivo existir mas estiver corrompido
+    ou incompatível (SerializationException), deleta e recria.
+    """
+    if os.path.exists(path):
+        try:
+            conn = duckdb.connect(path)
+            conn.execute("SELECT 1")  # testa se o arquivo é legível
+            conn.close()
+        except Exception as e:
+            logger.warning(f"DuckDB existente inválido ({e}) — deletando e recriando")
+            os.remove(path)
+            # Remove também o arquivo WAL se existir
+            wal = path + ".wal"
+            if os.path.exists(wal):
+                os.remove(wal)
+    return duckdb.connect(path)
 
 
 def run_bridge():
-    # 1. Delta → Parquet
-    spark = get_spark()
+    # 1. Silver Delta → Parquet
+    spark = get_spark("econ_bridge")
     logger.info("Silver Delta → Parquet...")
     df = spark.read.format("delta").load(SILVER_PATH)
     n  = df.count()
@@ -47,7 +57,8 @@ def run_bridge():
     # 2. Parquet → DuckDB view
     logger.info("Registrando no DuckDB...")
     os.makedirs(os.path.dirname(DW_PATH), exist_ok=True)
-    conn = duckdb.connect(DW_PATH)
+
+    conn = _safe_connect(DW_PATH)
     conn.execute("CREATE SCHEMA IF NOT EXISTS silver")
     parquet_glob = PARQUET_PATH.replace("\\", "/") + "/**/*.parquet"
     conn.execute(f"""

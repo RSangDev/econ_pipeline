@@ -2,13 +2,13 @@ version: 2
 
 models:
   - name: gld_painel_macro
-    description: "Painel anual de indicadores macro — SELIC, IPCA, câmbio, PIB, desemprego"
+    description: "Painel anual de indicadores macro"
     columns:
       - name: ano
         data_tests: [not_null, unique]
 
   - name: gld_serie_mensal
-    description: "Série mensal de todos os indicadores com variação YoY"
+    description: "Série mensal com variação YoY"
     columns:
       - name: indicador
         data_tests: [not_null]
@@ -17,11 +17,10 @@ models:
       - name: tendencia
         data_tests:
           - accepted_values:
-              arguments:
-                values: ['alta', 'queda', 'estavel', 'sem_dado']
+              values: ['alta', 'queda', 'estavel', 'sem_dado']
 
   - name: gld_correlacoes
-    description: "Análise de correlação entre indicadores por ano"
+    description: "Correlação entre indicadores por ano"
     columns:
       - name: ano
         data_tests: [not_null, unique]
