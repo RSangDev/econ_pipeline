@@ -7,7 +7,6 @@ import os, sys, logging
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _ROOT not in sys.path:
     sys.path.insert(0, _ROOT)
-
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from spark_session import get_spark
 
@@ -24,46 +23,57 @@ DELTA_DIR   = os.path.join(ROOT, "data", "delta")
 SILVER_PATH = os.path.join(DELTA_DIR, "silver", "indicadores")
 
 
+def _normalize_serie(df, categoria: str) -> DataFrame:
+    """Normaliza qualquer série para o schema Silver comum."""
+    # Determina o campo de período — séries BCB têm 'data', PIB tem 'periodo'
+    cols = df.columns
+    if "data" in cols:
+        periodo_col = F.col("data")
+    elif "periodo" in cols:
+        periodo_col = F.col("periodo")
+    else:
+        periodo_col = F.lit(None).cast("string")
+
+    # mes pode não existir em séries anuais
+    mes_col      = F.col("mes")      if "mes"      in cols else F.lit(None).cast("int")
+    trimestre_col = F.col("trimestre") if "trimestre" in cols else F.lit(None).cast("int")
+
+    return (df
+        .filter(F.col("valor").isNotNull())
+        .withColumn("categoria",  F.lit(categoria))
+        .withColumn("periodo",    periodo_col)
+        .withColumn("mes",        mes_col)
+        .withColumn("trimestre",  trimestre_col)
+        .withColumn("chave",      F.concat_ws("_", F.col("indicador"), periodo_col))
+        .select("chave", "fonte", "indicador", "categoria",
+                "periodo", "ano", "mes", "trimestre",
+                "valor", "unidade",
+                F.current_timestamp().alias("_silver_at"))
+    )
+
+
 def build_silver(spark) -> DataFrame:
     frames = []
 
     for path_key, categoria in [
         ("series_bcb",  "monetario"),
         ("series_ipea", "social"),
+        ("pib",         "atividade"),   # PIB — pode vir do IBGE ou BCB fallback
     ]:
         path = os.path.join(DELTA_DIR, "bronze", path_key)
         if not DeltaTable.isDeltaTable(spark, path):
+            logger.info(f"  {path_key}: não encontrado, pulando")
             continue
         df = spark.read.format("delta").load(path)
-        df = (df
-            .filter(F.col("valor").isNotNull())
-            .withColumn("categoria", F.lit(categoria))
-            .withColumn("chave", F.concat_ws("_", F.col("indicador"), F.col("data")))
-            .select("chave", "fonte", "indicador", "categoria",
-                    F.col("data").alias("periodo"), "ano", "mes",
-                    F.lit(None).cast("int").alias("trimestre"),
-                    "valor", "unidade",
-                    F.current_timestamp().alias("_silver_at"))
-        )
-        n = df.count()
-        frames.append(df)
-        logger.info(f"  {path_key}: {n} registros")
+        n_raw = df.count()
+        if n_raw == 0:
+            logger.info(f"  {path_key}: vazio, pulando")
+            continue
 
-    pib_path = os.path.join(DELTA_DIR, "bronze", "pib")
-    if DeltaTable.isDeltaTable(spark, pib_path):
-        pib = spark.read.format("delta").load(pib_path)
-        pib = (pib
-            .filter(F.col("valor").isNotNull())
-            .withColumn("categoria", F.lit("atividade"))
-            .withColumn("mes", F.lit(None).cast("int"))
-            .withColumn("chave", F.concat_ws("_", F.col("indicador"), F.col("periodo")))
-            .select("chave", "fonte", "indicador", "categoria",
-                    "periodo", "ano", "mes", "trimestre",
-                    "valor", "unidade",
-                    F.current_timestamp().alias("_silver_at"))
-        )
-        frames.append(pib)
-        logger.info(f"  pib: {pib.count()} registros")
+        df_norm = _normalize_serie(df, categoria)
+        n = df_norm.count()
+        frames.append(df_norm)
+        logger.info(f"  {path_key}: {n_raw} → {n} registros normalizados")
 
     if not frames:
         raise RuntimeError("Nenhuma fonte Bronze encontrada.")
@@ -75,11 +85,7 @@ def build_silver(spark) -> DataFrame:
                 f = f.withColumn(col, F.lit(None))
         silver = silver.unionByName(f, allowMissingColumns=True)
 
-    # ── Deduplica pelo campo chave ─────────────────────────────────
-    # O Bronze usa mode=append — múltiplas execuções acumulam linhas.
-    # O MERGE do Delta falha com DELTA_MULTIPLE_SOURCE_ROW_MATCHING_TARGET_ROW
-    # se a mesma chave aparecer mais de uma vez no source.
-    # Solução: pega apenas a versão mais recente de cada chave.
+    # Deduplica — Bronze usa mode=append, chave pode repetir entre execuções
     window_dedup = Window.partitionBy("chave").orderBy(F.col("_silver_at").desc())
     silver = (
         silver
@@ -101,7 +107,7 @@ def build_silver(spark) -> DataFrame:
 
 
 def run_silver():
-    spark  = get_spark("econ_silver")
+    spark = get_spark("econ_silver")
     logger.info("Construindo Silver layer...")
     silver = build_silver(spark)
     n      = silver.count()

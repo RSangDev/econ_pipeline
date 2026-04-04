@@ -152,13 +152,21 @@ if page == "📊 Painel Macro":
     df = query("SELECT * FROM {G}.gld_painel_macro ORDER BY ano DESC")
     ultimo = df.iloc[0] if not df.empty else {}
 
+    
+    def _fmt(val, fmt=".1f", prefix="", suffix=""):
+        import math
+        if val is None or (isinstance(val, float) and math.isnan(val)):
+            return "–"
+        return f"{prefix}{val:{fmt}}{suffix}"
+ 
     kpis = [
-        (GREEN,  f"{ultimo.get('selic_media', 0):.1f}%",    "SELIC Média",    str(int(ultimo.get('ano', '')))),
-        (RED,    f"{ultimo.get('ipca_media', 0):.2f}%",     "IPCA Médio",     "inflação mensal"),
-        (YELLOW, f"R$ {ultimo.get('cambio_medio', 0):.2f}", "Câmbio USD/BRL", "média anual"),
-        (ORANGE, f"{ultimo.get('desemprego_medio', 0):.1f}%","Desemprego",    "PNAD"),
-        (BLUE,   f"{ultimo.get('pib_variacao_media', 0):.2f}%","PIB Var. Média","anual"),
+        (GREEN,  _fmt(ultimo.get('selic_media'),        fmt=".1f", suffix="%"), "SELIC Média",    str(int(ultimo.get('ano', '')))),
+        (RED,    _fmt(ultimo.get('ipca_media'),         fmt=".2f", suffix="%"), "IPCA Médio",     "inflação mensal"),
+        (YELLOW, _fmt(ultimo.get('cambio_medio'),       fmt=".2f", prefix="R$ "), "Câmbio USD/BRL", "média anual"),
+        (ORANGE, _fmt(ultimo.get('desemprego_medio'),   fmt=".1f", suffix="%"), "Desemprego",     "PNAD"),
+        (BLUE,   _fmt(ultimo.get('pib_variacao_media'), fmt=".2f", suffix="%"), "PIB Var. Média", "anual"),
     ]
+ 
     cols = st.columns(5)
     for col, (accent, val, lbl, sub) in zip(cols, kpis):
         with col:
