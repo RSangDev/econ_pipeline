@@ -7,7 +7,7 @@ Orquestração real de indicadores econômicos públicos com TaskGroups, ACID tr
 
 ## Por que este projeto existe
 
-> Airflow aparece em praticamente toda vaga sênior de DE — mas a maioria dos portfólios mostra DAGs triviais com dois nós. Este projeto demonstra os padrões que realmente aparecem em produção: TaskGroups paralelos, ShortCircuitOperator para falha graceful, dependências entre grupos e integração com toda a stack moderna.
+> Airflow aparece em praticamente toda vaga de DE — mas a maioria dos portfólios mostra DAGs com dois nós. Este projeto demonstra os padrões que realmente aparecem em produção: TaskGroups paralelos, ShortCircuitOperator para falha graceful, dependências entre grupos e integração com toda a stack moderna.
 
 ---
 
